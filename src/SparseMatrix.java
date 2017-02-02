@@ -4,7 +4,7 @@ public class SparseMatrix {
 
     //HashMap :
     // key : column
-    // value :indexes filled with ones
+    // value :indices filled with ones
     private HashMap<Integer, TreeSet<Integer>> matrix;
     private int dimension;
 
@@ -19,10 +19,10 @@ public class SparseMatrix {
         this.dimension = F.size();
         sort(F);
 
-        //On parcourt tous les simplexes
+        //We loop over all simplices
         for(Simplex simplex : F){
             int dim = simplex.dim;
-            //Pour chaque simplexe, on retrouve ses frontieres de dimension dim-1 a partir des vertices
+            //For each simplex, we retrieve its dim-1 dimensional boundaries
             for(Simplex s : F){
                 if(s.dim==dim-1 && simplex.vert.containsAll(s.vert)){
                     this.setToOne(F.indexOf(s), F.indexOf(simplex));
@@ -53,9 +53,9 @@ public class SparseMatrix {
         return dimension;
     }
 
-    public int[] getPivots(){
-        int[] pivots = new int[dimension];
-        for(int j=0; j<dimension; j++){
+    public int[] getPivots(int indexMax){
+        int[] pivots = new int[indexMax+1];
+        for(int j=0; j<indexMax+1; j++){
             if(matrix.get(j) == null || matrix.get(j).isEmpty())
                 pivots[j] = -1;
             else
@@ -69,12 +69,13 @@ public class SparseMatrix {
     //--------------------------------------------------------------
 
     public int getSameLowColumn(int j){
-        if(matrix.get(j)==null || matrix.get(j).isEmpty())
+        int[] pivots = getPivots(j);
+        if(pivots[j]==-1)
             return -1;
-        int pivot = matrix.get(j).last();
-        //Check if the columns have same low and return it, else return null
+        int pivot = pivots[j];
+        //Check if the columns have same low and return it, else return -1
         for(int k=0; k<j; k++){
-            if(matrix.get(k) != null && !matrix.get(k).isEmpty() && matrix.get(k).last()==pivot)
+            if(pivots[k]==pivot)
                 return k;
         }
         return -1;

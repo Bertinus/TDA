@@ -5,14 +5,13 @@ import java.util.Vector;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-
         Vector<Simplex> F = ReadFiltration.readFiltration("/home/paul/IdeaProjects/TDA/Test.txt");
         SparseMatrix matrix = new SparseMatrix(F);
         System.out.println(F);
         System.out.println(matrix);
         reduce(matrix);
         System.out.println(matrix);
-        outputeBarcode(matrix, F);
+        outputBarcode(matrix, F);
 
     }
 
@@ -26,9 +25,10 @@ public class Main {
         }
     }
 
-    public static void outputeBarcode(SparseMatrix matrix, Vector<Simplex> F){
-        int[] pivots = matrix.getPivots();
+    public static void outputBarcode(SparseMatrix matrix, Vector<Simplex> F){
         int dimension = matrix.getDimension();
+        int[] pivots = matrix.getPivots(dimension-1);
+
         //Set of all pivots row indices
         TreeSet<Integer> pivotIndices = new TreeSet<>();
         for(int j=0; j<dimension; j++)
