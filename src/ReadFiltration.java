@@ -16,13 +16,4 @@ public class ReadFiltration {
         sc.close();
         return F;
     }
-
-    /*public static void main(String[] args) throws FileNotFoundException {
-        if (args.length != 1) {
-            System.out.println("Syntax: java ReadFiltration <filename>");
-            System.exit(0);
-        }
-
-        System.out.println(readFiltration(args[0]));
-    }*/
 }
