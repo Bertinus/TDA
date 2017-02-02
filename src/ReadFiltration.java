@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.TreeSet;
 import java.util.Vector;
 
 public class ReadFiltration {

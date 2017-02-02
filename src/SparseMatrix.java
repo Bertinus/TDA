@@ -1,26 +1,46 @@
-import java.util.HashMap;
-import java.util.TreeSet;
+import java.util.*;
 
 public class SparseMatrix {
 
-    //On map chaque colonne et on indique les indices contenant des uns
+    //HashMap :
+    // key : column
+    // value :indexes filled with ones
     private HashMap<Integer, TreeSet<Integer>> matrix;
     private int dimension;
 
-    public SparseMatrix(int dimension){
-        this.dimension = dimension;
+    //-------------------------------------------------------------
+            //Constructor
+    //-------------------------------------------------------------
+
+
+    //Creates the boundary matrix of F
+    public SparseMatrix(Vector<Simplex> F){
         this.matrix = new HashMap<>();
+        this.dimension = F.size();
+        sort(F);
+
+        //On parcourt tous les simplexes
+        for(Simplex simplex : F){
+            int dim = simplex.dim;
+            //Pour chaque simplexe, on retrouve ses frontieres de dimension dim-1 a partir des vertices
+            for(Simplex s : F){
+                if(s.dim==dim-1 && simplex.vert.containsAll(s.vert)){
+                    this.setToOne(F.indexOf(s), F.indexOf(simplex));
+                }
+            }
+        }
+
     }
 
+    //--------------------------------------------------------------
+        //Operations on matrices
+    //--------------------------------------------------------------
+
     public void setToOne(int i, int j) throws IndexOutOfBoundsException{
-        if(!(i>=0) || !(j>=0) || !(i<this.dimension) || !(j<this.dimension))
-            System.exit(0);
-        else{
-            if( !matrix.containsKey(j)){
-                matrix.put(j, new TreeSet<>());
-            }
-            matrix.get(j).add(i);
+        if( !matrix.containsKey(j)){
+            matrix.put(j, new TreeSet<>());
         }
+        matrix.get(j).add(i);
     }
 
     public int get(int i, int j){
@@ -30,8 +50,21 @@ public class SparseMatrix {
         return 1;
     }
 
-    public int getPivot(int j){
-        return matrix.get(j).last();
+    public int getDimension(){
+        return dimension;
+    }
+
+    public int getSameLowColumn(int j){
+        if(matrix.get(j)==null || matrix.get(j).isEmpty())
+            return -1;
+        int pivot = matrix.get(j).last();
+
+        //Check if the columns have same low and return it, else return null
+        for(int k=0; k<j; k++){
+            if(matrix.get(k) != null && !matrix.get(k).isEmpty() && matrix.get(k).last()==pivot)
+                return k;
+        }
+        return -1;
     }
 
     public void addColumn(int i, int j){
@@ -46,6 +79,32 @@ public class SparseMatrix {
                 setj.add(k);
             }
         }
+    }
+
+    public int getLowIndex(int j){
+        if(matrix.get(j) == null || matrix.get(j).isEmpty())
+            return -1;
+        return matrix.get(j).last();
+    }
+
+    //---------------------------------------------------------------
+
+    public void sort(Vector<Simplex> F){
+        Comparator<Simplex> comparator = new SimplexComparator();
+        Collections.sort(F, comparator);
+    }
+
+    @Override
+    public String toString(){
+        String s = "";
+        for(int i=0; i<dimension; i++){
+            s+="[ ";
+            for(int j=0; j<dimension; j++){
+                s+=this.get(i, j) + " ";
+            }
+            s+="]\n";
+        }
+        return s;
     }
 
 }
