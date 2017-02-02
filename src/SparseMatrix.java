@@ -29,11 +29,10 @@ public class SparseMatrix {
                 }
             }
         }
-
     }
 
     //--------------------------------------------------------------
-        //Operations on matrices
+        //Setters and Getters
     //--------------------------------------------------------------
 
     public void setToOne(int i, int j) throws IndexOutOfBoundsException{
@@ -54,11 +53,25 @@ public class SparseMatrix {
         return dimension;
     }
 
+    public int[] getPivots(){
+        int[] pivots = new int[dimension];
+        for(int j=0; j<dimension; j++){
+            if(matrix.get(j) == null || matrix.get(j).isEmpty())
+                pivots[j] = -1;
+            else
+                pivots[j] = matrix.get(j).last();
+        }
+        return pivots;
+    }
+
+    //--------------------------------------------------------------
+        //Operations on matrices
+    //--------------------------------------------------------------
+
     public int getSameLowColumn(int j){
         if(matrix.get(j)==null || matrix.get(j).isEmpty())
             return -1;
         int pivot = matrix.get(j).last();
-
         //Check if the columns have same low and return it, else return null
         for(int k=0; k<j; k++){
             if(matrix.get(k) != null && !matrix.get(k).isEmpty() && matrix.get(k).last()==pivot)
@@ -71,7 +84,6 @@ public class SparseMatrix {
         //adds column i to column j
         TreeSet<Integer> seti = matrix.get(i);
         TreeSet<Integer> setj = matrix.get(j);
-
         for(int k : seti){
             if(setj.contains(k))
                 setj.remove(k);
@@ -79,12 +91,6 @@ public class SparseMatrix {
                 setj.add(k);
             }
         }
-    }
-
-    public int getLowIndex(int j){
-        if(matrix.get(j) == null || matrix.get(j).isEmpty())
-            return -1;
-        return matrix.get(j).last();
     }
 
     //---------------------------------------------------------------
