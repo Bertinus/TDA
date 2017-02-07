@@ -16,18 +16,19 @@ public class Main {
         */
 
         //-------------------------------------------------------------------------------------
-        //Computes all the barcodes
+        //Computes the barcodes
         //-------------------------------------------------------------------------------------
 
         long startTime = System.currentTimeMillis();
-        Vector<Simplex> F = ReadFiltration.readFiltration("/home/paul/IdeaProjects/TDA/filtrations/filtration_Projective_Plane.txt");
+        Vector<Simplex> F = ReadFiltration.readFiltration("/home/paul/IdeaProjects/TDA/filtrations/filtration_C.txt");
         BoundaryMatrix matrix = new BoundaryMatrix(F);
         reduce(matrix);
-        outputBarcode(matrix, F, "Projective_PlaneBarcode.txt");
+        outputBarcode(matrix, F, "barcode.txt");
         long endTime = System.currentTimeMillis();
         long time = endTime - startTime;
-        System.out.println("computation time : "+ time + " millisec");
-        System.out.println("dimension : "+ matrix.getDimension());
+        System.out.println("\n\ncomputation time : "+ time + " millisec");
+        System.out.println("dimension : "+ matrix.getDimension()+"\n\n");
+
     }
 
     public static void reduce(BoundaryMatrix matrix){
